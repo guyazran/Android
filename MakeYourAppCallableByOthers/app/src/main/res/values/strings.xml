@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Make Your App Callable By Others</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_my_browser">My Browser Activity</string>
+</resources>
