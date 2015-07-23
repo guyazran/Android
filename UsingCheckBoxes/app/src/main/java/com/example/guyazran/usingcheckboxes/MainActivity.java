@@ -15,6 +15,10 @@ public class MainActivity extends ActionBarActivity {
 
     Toast t;
 
+    //for teacher's solution
+    LinearLayout rating;
+    CheckBox star;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +37,8 @@ public class MainActivity extends ActionBarActivity {
                 t.show();
             }
         });
-
+/*
+        //my solution
         CompoundButton.OnClickListener rateListener = new CompoundButton.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,8 +65,32 @@ public class MainActivity extends ActionBarActivity {
         chkStar4.setOnClickListener(rateListener);
         CheckBox chkStar5 = (CheckBox) findViewById(R.id.chkStar5);
         chkStar5.setOnClickListener(rateListener);
+*/
+
+        //teacher's solution - more optimized
+        rating = (LinearLayout)findViewById(R.id.ratingSystem);
+
+        for (int i = 1; i <= 5; i++) {
+            star = (CheckBox) rating.findViewWithTag(String.valueOf(i));
+            star.setOnClickListener(startListener);
+        }
 
     }
+
+    private View.OnClickListener startListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int tag = Integer.valueOf((String) v.getTag());
+            for (int i = 1; i <= tag; i++) {
+                star = (CheckBox) rating.findViewWithTag(String.valueOf(i));
+                star.setChecked(true);
+            }
+            for (int i = tag + 1; i <= 5; i++) {
+                star = (CheckBox) rating.findViewWithTag(String.valueOf(i));
+                star.setChecked(false);
+            }
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
