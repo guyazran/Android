@@ -1,0 +1,23 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:backgroundTint="@android:color/transparent"
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/angry_birds_small"
+        android:onClick="onClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageTextButton1"
+        android:drawableBottom="@drawable/angry_birds_small"
+        android:drawableRight="@drawable/angry_birds_small"
+        android:text="Angry Birds"/>
+
+</LinearLayout>
