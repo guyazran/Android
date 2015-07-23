@@ -20,7 +20,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CheckBox chkAutosave = (CheckBox)findViewById(R.id.chkAutosave);
+        CheckBox chkAutosave = (CheckBox) findViewById(R.id.chkAutosave);
         chkAutosave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -34,6 +34,32 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        CompoundButton.OnClickListener rateListener = new CompoundButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout ratingSystem = (LinearLayout) findViewById(R.id.ratingSystem);
+                for (Integer i = 1; i<= ratingSystem.getChildCount(); i++){
+                    CheckBox chkStar = (CheckBox) ratingSystem.findViewWithTag(i.toString());
+                    chkStar.setChecked(false);
+                }
+                CheckBox chkRating = (CheckBox) v;
+                for (Integer i = 1; i <= Integer.valueOf((String) chkRating.getTag()); i++) {
+                    CheckBox chkStar = (CheckBox) ratingSystem.findViewWithTag(i.toString());
+                    chkStar.setChecked(true);
+                }
+            }
+        };
+
+        CheckBox chkStar1 = (CheckBox) findViewById(R.id.chkStar1);
+        chkStar1.setOnClickListener(rateListener);
+        CheckBox chkStar2 = (CheckBox) findViewById(R.id.chkStar2);
+        chkStar2.setOnClickListener(rateListener);
+        CheckBox chkStar3 = (CheckBox) findViewById(R.id.chkStar3);
+        chkStar3.setOnClickListener(rateListener);
+        CheckBox chkStar4 = (CheckBox) findViewById(R.id.chkStar4);
+        chkStar4.setOnClickListener(rateListener);
+        CheckBox chkStar5 = (CheckBox) findViewById(R.id.chkStar5);
+        chkStar5.setOnClickListener(rateListener);
 
     }
 
