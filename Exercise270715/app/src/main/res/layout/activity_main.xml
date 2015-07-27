@@ -1,0 +1,29 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/txtNum1"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"/>
+    <EditText
+        android:id="@+id/txtNum2"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"/>
+    <Button
+        android:id="@+id/btnPlus"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="+"
+        android:onClick="btnPlus"/>
+
+    <TextView
+        android:id="@+id/lblResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
