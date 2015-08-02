@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Displaying Dialogs</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+</resources>
