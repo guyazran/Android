@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements EditContactDialogFragment.EditContactDialogListener {
 
@@ -18,10 +21,23 @@ public class MainActivity extends AppCompatActivity implements EditContactDialog
     TextView shownFirstName;
     TextView shownLastName;
 
+
+    //teacher fields
+    private Contact[] contactsTeacher = {
+            new Contact("Jon", "Smith", R.drawable.person1),
+            new Contact("Adam", "Jones", R.drawable.person2),
+            new Contact("David", "Brown", R.drawable.person3),
+            new Contact("Alex", "Wilson", R.drawable.person4),
+            new Contact("Emma", "Baker", R.drawable.person5),
+    };
+    ViewPager viewPagerTeacher;
+    ContactPageAdapterTeacher adapterTeacher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         Contact jon = new Contact("Jon", "Smith", R.drawable.person1);
         Contact adam = new Contact("Adam", "Jones", R.drawable.person2);
@@ -36,9 +52,14 @@ public class MainActivity extends AppCompatActivity implements EditContactDialog
         contacts[3] = alex;
         contacts[4] = emma;
         ContactsPageAdapter adapter = new ContactsPageAdapter(contacts);
-        viewPager = (ViewPager)findViewById(R.id.viewPager);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(0);
+//        viewPager = (ViewPager)findViewById(R.id.viewPager);
+//        viewPager.setAdapter(adapter);
+//        viewPager.setCurrentItem(0);
+
+        //teacher solution
+        adapterTeacher = new ContactPageAdapterTeacher(contactsTeacher);
+        viewPagerTeacher =  (ViewPager)findViewById(R.id.viewPager);
+        viewPagerTeacher.setAdapter(adapterTeacher);
     }
 
     @Override
