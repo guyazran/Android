@@ -2,6 +2,7 @@ package com.example.guyazran.tictactoe;
 
 import android.app.ActionBar;
 import android.graphics.Color;
+import android.os.TokenWatcher;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,8 +12,11 @@ import android.view.View;
 import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    TicTacToe gameLogic;
 
     LinearLayout boardLayout;
 
@@ -20,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        gameLogic = new TicTacToe();
         boardLayout = (LinearLayout)findViewById(R.id.boardLayout);
+        int tagCounter = 1;
         for (int i = 0; i < 3; i++) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -31,9 +37,10 @@ public class MainActivity extends AppCompatActivity {
                 textView.setGravity(Gravity.CENTER);
                 textView.setOnClickListener(cellClickListener);
                 textView.setBackgroundColor(Color.BLUE);
+                textView.setTag(tagCounter++);
 
                 LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(250, 250);
-                textViewLayout.setMargins(5,5,5,5);
+                textViewLayout.setMargins(5, 5, 5, 5);
                 row.addView(textView, textViewLayout);
             }
             LinearLayout.LayoutParams rowLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -45,7 +52,27 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener cellClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ((TextView)v).setText("X");
+            //save turn here because makeMove() changes turn
+            boolean xTurn = gameLogic.isXTurn();
+            TicTacToe.MoveResult moveResult = gameLogic.makeMove(Integer.valueOf(v.getTag().toString()));
+            if (moveResult == TicTacToe.MoveResult.INVALID_MOVE) {
+                return;
+            }
+            else{
+                if (xTurn) {
+                    ((TextView) v).setText("X");
+                } else {
+                    ((TextView) v).setText("O");
+                }
+            }
+            if (moveResult == TicTacToe.MoveResult.VICTORY) {
+                Toast.makeText(MainActivity.this, (xTurn ? "Player 1" : "Player 2") + " wins!", Toast.LENGTH_LONG).show();
+                emptyBoard();
+            }
+            if (moveResult == TicTacToe.MoveResult.DRAW) {
+                Toast.makeText(MainActivity.this, "Draw", Toast.LENGTH_LONG).show();
+                emptyBoard();
+            }
         }
     };
 
@@ -69,5 +96,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void emptyBoard(){
+        for (int i = 1; i <= 9; i++) {
+            TextView textView = (TextView)boardLayout.findViewWithTag(i);
+            textView.setText("");
+        }
+        gameLogic.newGame();
     }
 }
