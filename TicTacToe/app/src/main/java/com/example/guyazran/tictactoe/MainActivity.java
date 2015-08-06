@@ -1,47 +1,46 @@
 package com.example.guyazran.tictactoe;
 
-import android.app.ActionBar;
-import android.graphics.Color;
-import android.os.TokenWatcher;
+import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ActionMenuView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.guyazran.tictactoe.TicTacToe.MoveResult;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GameOverDialogFragment.GameOverDialogListener {
 
-    TicTacToe gameLogic;
-
+    TicTacToe game;
     LinearLayout boardLayout;
+
+    int player1Score=0;
+    int player2Score=0;
+    TextView player1ScoreView;
+    TextView player2ScoreView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        gameLogic = new TicTacToe();
+        game = new TicTacToe();
         boardLayout = (LinearLayout)findViewById(R.id.boardLayout);
-        int tagCounter = 1;
+        player1ScoreView = (TextView)findViewById(R.id.player1Score);
+        player2ScoreView = (TextView)findViewById(R.id.player2Score);
         for (int i = 0; i < 3; i++) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
             for (int j = 0; j < 3; j++) {
-                TextView textView = new TextView(this);
-                textView.setTextSize(50);
-                textView.setTextColor(Color.WHITE);
-                textView.setGravity(Gravity.CENTER);
-                textView.setOnClickListener(cellClickListener);
-                textView.setBackgroundColor(Color.BLUE);
-                textView.setTag(tagCounter++);
+                ImageView cellView = new ImageView(this);
+                cellView.setOnClickListener(cellClickListener);
+                cellView.setTag(i * 3 + j + 1);
 
-                LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(250, 250);
+                LinearLayout.LayoutParams textViewLayout = new LinearLayout.LayoutParams(275, 275, 1.0f);
                 textViewLayout.setMargins(5, 5, 5, 5);
-                row.addView(textView, textViewLayout);
+                row.addView(cellView, textViewLayout);
             }
             LinearLayout.LayoutParams rowLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -53,25 +52,31 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             //save turn here because makeMove() changes turn
-            boolean xTurn = gameLogic.isXTurn();
-            TicTacToe.MoveResult moveResult = gameLogic.makeMove(Integer.valueOf(v.getTag().toString()));
+            boolean xTurn = game.isXTurn();
+            int cell = (Integer)v.getTag();
+            MoveResult moveResult = game.makeMove(cell);
             if (moveResult == TicTacToe.MoveResult.INVALID_MOVE) {
-                return;
+                Toast.makeText(getBaseContext(), (game.isPlayable() ? "Invalid move!" : "Start a new game"), Toast.LENGTH_SHORT).show();
             }
             else{
-                if (xTurn) {
-                    ((TextView) v).setText("X");
-                } else {
-                    ((TextView) v).setText("O");
+                ((ImageView) v).setImageResource(xTurn ? R.drawable.x : R.drawable.o);
+                if (moveResult != MoveResult.VALID_MOVE) {
+                    GameOverDialogFragment fragment = new GameOverDialogFragment();
+                    if (moveResult == MoveResult.VICTORY) {
+                        if (xTurn) {
+                            player1ScoreView.setText(String.valueOf(++player1Score));
+                            fragment.setFragment("We Have a Winner!", "Player 1 wins", MainActivity.this);
+
+                        } else {
+                            player2ScoreView.setText(String.valueOf(++player2Score));
+                            fragment.setFragment("We Have a Winner!", "Player 2 wins", MainActivity.this);
+                        }
+                    } else if (moveResult == TicTacToe.MoveResult.DRAW) {
+                            fragment.setFragment("Draw", "Start a new game", MainActivity.this);
+                    }
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragment.show(fragmentManager, "game over");
                 }
-            }
-            if (moveResult == TicTacToe.MoveResult.VICTORY) {
-                Toast.makeText(MainActivity.this, (xTurn ? "Player 1" : "Player 2") + " wins!", Toast.LENGTH_LONG).show();
-                emptyBoard();
-            }
-            if (moveResult == TicTacToe.MoveResult.DRAW) {
-                Toast.makeText(MainActivity.this, "Draw", Toast.LENGTH_LONG).show();
-                emptyBoard();
             }
         }
     };
@@ -97,11 +102,21 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public void emptyBoard(){
+
+    public void startNewGame(View view) {
+        startNewGame();
+    }
+
+    public void startNewGame(){
         for (int i = 1; i <= 9; i++) {
-            TextView textView = (TextView)boardLayout.findViewWithTag(i);
-            textView.setText("");
+            ImageView cellView = (ImageView)boardLayout.findViewWithTag(i);
+            cellView.setImageDrawable(null);
         }
-        gameLogic.newGame();
+        game.newGame();
+    }
+
+    @Override
+    public void onStartNewGame() {
+        startNewGame();
     }
 }

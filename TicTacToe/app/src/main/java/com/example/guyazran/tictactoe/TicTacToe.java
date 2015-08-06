@@ -16,6 +16,7 @@ public class TicTacToe {
     private CellValue[] board;
     private boolean isXTurn;
     private int moveCount;
+    private boolean playable;
 
     public TicTacToe(){
         board = new CellValue[9];
@@ -31,12 +32,14 @@ public class TicTacToe {
         cell--;
         if (cell<0 || cell > 8)
             return MoveResult.INVALID_MOVE;
-        if (board[cell] == CellValue.EMPTY) {
+        if (board[cell] == CellValue.EMPTY && playable) {
             moveCount++;
             board[cell] = isXTurn ? CellValue.X : CellValue.O;
             isXTurn = !isXTurn;
-            if (moveCount >= 5 && checkVictory(cell))
+            if (moveCount >= 5 && checkVictory(cell)) {
+                playable = false;
                 return MoveResult.VICTORY;
+            }
             if (moveCount == board.length)
                 return MoveResult.DRAW;
             return MoveResult.VALID_MOVE;
@@ -137,11 +140,20 @@ public class TicTacToe {
         return isXTurn;
     }
 
+    public int getMoveCount(){
+        return moveCount;
+    }
+
+    public boolean isPlayable() {
+        return playable;
+    }
+
     public void newGame(){
         for (int i = 0; i < 9; i++) {
             board[i] = CellValue.EMPTY;
         }
         isXTurn = true;
         moveCount = 0;
+        playable = true;
     }
 }
