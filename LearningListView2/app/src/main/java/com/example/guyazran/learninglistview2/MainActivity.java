@@ -63,6 +63,29 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.motorola
     };
 
+//    private ListItem[] cityList = {
+//        new ListItem("Tel Aviv", "non Stop City", R.drawable.smiley_1),
+//        new ListItem("Ramat Gan", "Ramat Gan", 0),
+//        new ListItem("Rishon Lezion", "Rishon Lezion", 0),
+//        new ListItem("Modi'in", "The city of the future", R.drawable.smiley_2),
+//        new ListItem("Kfar Saba", "tel aviv hasharon", R.drawable.smiley_3),
+//        new ListItem("Ra'anana", "the pearl of HaSharon", R.drawable.smiley_4),
+//        new ListItem("Hertselya", "Hertselya", 0),
+//        new ListItem("Haifa", "Haifa", 0),
+//        new ListItem("Ashdod", "The harbor city", R.drawable.motorola),
+//        new ListItem("Ashkelon", "Ashkelon", R.drawable.filmax),
+//        new ListItem("Eilat", "The Vegas of Israel", R.drawable.smiley_1),
+//        new ListItem("Tiberius", "The lake city", R.drawable.smiley_2),
+//        new ListItem("Katsrin", "Katsrin", 0),
+//        new ListItem("Rehovot", "Rehovot", 0),
+//        new ListItem("Lod", "The crime city", R.drawable.smiley_3),
+//        new ListItem("Jerusalem", "The holy City", R.drawable.smiley_4),
+//        new ListItem("Netanya", "The mafia city", R.drawable.motorola),
+//        new ListItem("Hadera", "Hadera", 0),
+//    };
+
+    private ListItem[] listItems;
+
     ListView listView1, listView2;
 
     @Override
@@ -71,8 +94,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities);
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.whatsapp_contact_item, R.id.txtContactName,cities);
-        CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
-                R.id.txtContactStatus, R.id.imgContact, cities, citiesStatus, images);
+        //CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
+        //        R.id.txtContactStatus, R.id.imgContact, cities, citiesStatus, images);
+
+        listItems = new ListItem[cities.length];
+        for (int i = 0; i < cities.length; i++) {
+            listItems[i] = new ListItem(cities[i], citiesStatus[i], i<images.length ? images[i] : 0);
+        }
+
+        ItemArrayAdapter adapter = new ItemArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
+                R.id.txtContactStatus, R.id.imgContact, listItems);
         listView1 = (ListView)findViewById(R.id.listView1);
         listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
