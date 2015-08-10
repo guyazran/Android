@@ -102,7 +102,10 @@ public class MainActivity extends AppCompatActivity {
             listItems[i] = new ListItem(cities[i], citiesStatus[i], i<images.length ? images[i] : 0);
         }
 
-        ItemArrayAdapter adapter = new ItemArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
+        //ItemArrayAdapter adapter = new ItemArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
+        //        R.id.txtContactStatus, R.id.imgContact, listItems);
+
+        AdvancedArrayAdapter adapter = new AdvancedArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
                 R.id.txtContactStatus, R.id.imgContact, listItems);
         listView1 = (ListView)findViewById(R.id.listView1);
         listView1.setAdapter(adapter);
