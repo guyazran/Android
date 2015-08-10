@@ -26,12 +26,32 @@ public class MainActivity extends AppCompatActivity {
             "Ashdod",
             "Ashkelon",
             "Eilat",
-            "Tiverius",
+            "Tiberius",
             "Katsrin",
             "Rehovot",
             "Lod",
             "Jerusalem",
             "Netanya",
+            "Hadera"
+    };
+    private String[] citiesStatus = {
+            "non Stop City",
+            "Ramat Gan",
+            "Rishon Lezion",
+            "the city of the future",
+            "tel aviv HaSharon",
+            "pearl of HaSharon",
+            "Hertselya",
+            "Haifa",
+            "the harbor city",
+            "Ashkelon",
+            "the Vegas of Israel",
+            "the lake city",
+            "Katsrin",
+            "Rehovot",
+            "the crime city",
+            "the holy city",
+            "the mafia city",
             "Hadera"
     };
 
@@ -41,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.whatsapp_contact_item, R.id.txtContactName,cities);
         listView1 = (ListView)findViewById(R.id.listView1);
         listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         listView2 = (ListView)findViewById(R.id.listView2);
         listView2.setAdapter(adapter);
         listView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -59,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getBaseContext(), "You have Selected item: " + cities[position], Toast.LENGTH_LONG).show();
             }
         });
+        */
 
 
     }
