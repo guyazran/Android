@@ -54,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
             "the mafia city",
             "Hadera"
     };
+    private int[] images = {
+            R.drawable.smiley_1,
+            R.drawable.smiley_2,
+            R.drawable.smiley_3,
+            R.drawable.smiley_4,
+            R.drawable.filmax,
+            R.drawable.motorola
+    };
 
     ListView listView1, listView2;
 
@@ -62,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cities);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.whatsapp_contact_item, R.id.txtContactName,cities);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.whatsapp_contact_item, R.id.txtContactName,cities);
+        CustomArrayAdapter adapter = new CustomArrayAdapter(this, R.layout.whatsapp_contact_item, R.id.txtContactName,
+                R.id.txtContactStatus, R.id.imgContact, cities, citiesStatus, images);
         listView1 = (ListView)findViewById(R.id.listView1);
         listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
