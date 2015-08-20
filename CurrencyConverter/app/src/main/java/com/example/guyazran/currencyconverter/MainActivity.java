@@ -12,13 +12,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -205,11 +210,32 @@ public class MainActivity extends AppCompatActivity {
         return inputStream;
     }
 
+    public static InputStream openHttpPostConnection(String url, String from, String to) throws Exception{
+        InputStream inputStream = null;
+        HttpClient httpClient = new DefaultHttpClient();
+
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("Host", "www.webservicex.net");
+        httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("FromCurrency", from));
+        nameValuePairs.add(new BasicNameValuePair("ToCurrency", to));
+
+        httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        inputStream = httpResponse.getEntity().getContent();
+        return inputStream;
+    }
+
     public String downloadText(String url){
         int BUFFER_SIZE = 1024;
         InputStream inputStream = null;
+        String from = getCurrencyInit(currencies[spnFromCurrency.getSelectedItemPosition()]);
+        String to = getCurrencyInit(currencies[spnToCurrency.getSelectedItemPosition()]);
         try {
-            inputStream = openHttpGetConnection(url);
+            //inputStream = openHttpGetConnection(url);
+            inputStream = openHttpPostConnection(url, from, to);
         } catch (Exception ex){
             return "error";
         }
@@ -257,13 +283,18 @@ public class MainActivity extends AppCompatActivity {
     public void btnConvert(View view) {
         lblResult.setText("Please wait...");
 
-        String from = currencies[spnFromCurrency.getSelectedItemPosition()];
-        String to = currencies[spnToCurrency.getSelectedItemPosition()];
-        from = from.substring(0, 3);
-        to = to.substring(0,3);
-
-        String url = "http://www.webservicex.net/currencyconvertor.asmx/ConversionRate?FromCurrency=" + from + "&ToCurrency=" + to;
+//        String from = getCurrencyInit(currencies[spnFromCurrency.getSelectedItemPosition()]);
+//        String to = getCurrencyInit(currencies[spnToCurrency.getSelectedItemPosition()]);
+//
+//
+//        String url = "http://www.webservicex.net/currencyconvertor.asmx/ConversionRate?FromCurrency=" + from + "&ToCurrency=" + to;
+        String url = "http://www.webservicex.net/currencyconvertor.asmx/ConversionRate";
         new DownloadTextTask().execute(url);
+    }
+
+    public String getCurrencyInit(String s){
+        s = s.substring(0, s.indexOf('-'));
+        return s;
     }
 
     private static float convertRateToFloat(String s){
