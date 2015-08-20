@@ -12,11 +12,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,9 +99,39 @@ public class MainActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    public String readJSONFeed(String url){
+        StringBuilder stringBuilder = new StringBuilder();
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+        try {
+            HttpResponse response = httpClient.execute(httpGet);
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            if (statusCode == 200){
+                HttpEntity httpEntity = response.getEntity();
+                InputStream inputStream = httpEntity.getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = reader.readLine()) != null){
+                    stringBuilder.append(line);
+                }
+                inputStream.close();
+            }else {
+                Log.d("Guy", "status code is not OK");
+            }
+        }catch (Exception ex){
+            Log.d("Guy", "error: " + ex.getMessage());
+        }
+        return stringBuilder.toString();
+    }
+
     public void btnDownloadImage(View view) {
         String url = "http://orig13.deviantart.net/649b/f/2013/209/c/2/minion_png_by_isammyt-d6fn0fj.png";
         new DownloadImageTask().execute(url);
+    }
+
+    public void btnReadWeather(View view) {
+        new ReadWeatherJSONFeedTask().execute("http://api.openweathermap.org/data/2.5/weather?q=telaviv,il");
     }
 
 
@@ -127,6 +161,26 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap bitmap) {
             ImageView img = (ImageView)findViewById(R.id.image);
             img.setImageBitmap(bitmap);
+        }
+    }
+
+    private class ReadWeatherJSONFeedTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            return readJSONFeed(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONObject main = new JSONObject(jsonObject.getString("main"));
+                String temp = main.getString("temp");
+                Toast.makeText(getBaseContext(), "temp = " + temp, Toast.LENGTH_LONG).show();
+            }catch (Exception ex){
+
+            }
         }
     }
 

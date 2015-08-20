@@ -21,6 +21,13 @@
         android:layout_height="wrap_content"
         android:text="Download Image"
         android:id="@+id/btnDownloadImage"
+        android:layout_below="@+id/btnDownloadText"
         android:onClick="btnDownloadImage"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download Weather"
+        android:layout_below="@+id/btnDownloadImage"
+        android:onClick="btnReadWeather"/>
 
 </RelativeLayout>
