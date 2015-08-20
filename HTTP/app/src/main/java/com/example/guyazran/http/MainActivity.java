@@ -1,5 +1,7 @@
 package com.example.guyazran.http;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -70,6 +73,33 @@ public class MainActivity extends AppCompatActivity {
         new DownloadTextTask().execute(url);
     }
 
+    private Bitmap downloadImage(String url){
+        Bitmap bitmap = null;
+        InputStream inputStream = null;
+        try {
+            inputStream = openHttpGetConnection(url);
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+        } catch (Exception ex){
+
+        }
+        finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bitmap;
+    }
+
+    public void btnDownloadImage(View view) {
+        String url = "http://orig13.deviantart.net/649b/f/2013/209/c/2/minion_png_by_isammyt-d6fn0fj.png";
+        new DownloadImageTask().execute(url);
+    }
+
 
     private class DownloadTextTask extends AsyncTask<String, Void, String>{
 
@@ -82,6 +112,21 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             Toast.makeText(getBaseContext(), s, Toast.LENGTH_LONG).show();
             Log.d("Guy", s);
+        }
+
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return downloadImage(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            ImageView img = (ImageView)findViewById(R.id.image);
+            img.setImageBitmap(bitmap);
         }
     }
 
