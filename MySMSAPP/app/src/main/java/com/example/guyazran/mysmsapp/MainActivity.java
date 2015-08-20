@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     EditText txtMessage;
     EditText txtRecipient;
-    LinearLayout messageLayout;
     TextView lblCheckSent;
 
     ArrayList<MySMS> mySMSList;
@@ -36,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String SMS_DELIVERED = "SMS_DELIVERED";
     PendingIntent sendPendingIntent, deliveredPendingIntent;
     BroadcastReceiver smsSentReceiver, smsDeliveredReceiver;
-    int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         mySMSList = new ArrayList<MySMS>();
 
         lstSentMessages = (ListView)findViewById(R.id.lstSentMessages);
-        adapter = new MySMSArrayAdapter(this, R.layout.message_item, R.id.lblMessage, R.id.lblRecipient, R.id.lblCheckSent,mySMSList);
+        adapter = new MySMSArrayAdapter(this, R.layout.item_message, R.id.lblMessage, R.id.lblRecipient, R.id.lblCheckSent,mySMSList);
         lstSentMessages.setAdapter(adapter);
 
         sendPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
@@ -67,9 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (getResultCode()){
                     case RESULT_OK:
-                        messageLayout = (LinearLayout) lstSentMessages.getChildAt(lstSentMessages.getCount() - 1);
-                        lblCheckSent = (TextView)messageLayout.findViewById(R.id.lblCheckSent);
-                        lblCheckSent.setText("V");
+                        mySMSList.get(lstSentMessages.getCount() - 1).setIsSent(true);
+                        adapter.notifyDataSetChanged();
                         break;
                     case RESULT_CANCELED:
                         Toast.makeText(getBaseContext(), "SMS Not Sent", Toast.LENGTH_LONG).show();
@@ -83,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()){
                     case RESULT_OK:
-                        lblCheckSent.setTextColor(Color.BLUE);
+                        mySMSList.get(lstSentMessages.getCount() - 1).setIsDelivered(true);
+                        adapter.notifyDataSetChanged();
                         break;
                     case RESULT_CANCELED:
                         Toast.makeText(getBaseContext(), "SMS Not Delivered", Toast.LENGTH_LONG).show();
@@ -136,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
             }
             mySMSList.add(new MySMS(message, recipient));
             adapter.notifyDataSetChanged();
-            counter++;
             lstSentMessages.setSelection(lstSentMessages.getCount() - 1);
         }
 

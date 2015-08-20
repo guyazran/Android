@@ -38,7 +38,7 @@ public class MySMSArrayAdapter extends ArrayAdapter<MySMS> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewContainer viewContainer;
+        ViewContainer viewContainer;
         View rowView = convertView;
 
         if (rowView == null) {
@@ -52,13 +52,15 @@ public class MySMSArrayAdapter extends ArrayAdapter<MySMS> {
         } else {
             viewContainer = (ViewContainer) rowView.getTag();
         }
+        MySMS mySMSAtPosition = mySMSList.get(position);
         if (mySMSList != null && mySMSList.get(position) != null) {
-            if (mySMSList.get(position).getMessage() != null)
-                viewContainer.lblMessage.setText(mySMSList.get(position).getMessage());
-            if (mySMSList.get(position).getRecipient() != null)
-                viewContainer.lblRecipient.setText("To: " + mySMSList.get(position).getRecipient());
-            viewContainer.lblCheckSent.setText("");
-            viewContainer.lblCheckSent.setTextColor(Color.BLACK);
+            if (mySMSAtPosition.getMessage() != null)
+                viewContainer.lblMessage.setText(mySMSAtPosition.getMessage());
+            if (mySMSAtPosition.getRecipient() != null)
+                viewContainer.lblRecipient.setText("To: " + mySMSAtPosition.getRecipient());
+
+            viewContainer.lblCheckSent.setText(mySMSAtPosition.isSent() ? "V" : "");
+            viewContainer.lblCheckSent.setTextColor(mySMSAtPosition.isDelivered() ? Color.BLUE : Color.BLACK);
         }
 
         return rowView;
