@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     String[] cities = {
             "Jerusalem, IL",
             "Moscow, RU",
-            "New York City, US",
+            "New-York City, US",
             "Madrid, ES",
             "Cairo, EG",
             "Johannesburg, ZA",
@@ -236,7 +236,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void btnGetWeather(View view) {
         String chosenCity = actChooseCity.getText().toString();
+        chosenCity = chosenCity.toLowerCase();
 
+        chosenCity = chosenCity.replaceAll("new york", "new-york");
+        
         if (chosenCity.equals("")){
             Toast.makeText(this, "Please enter a name of a city in the world", Toast.LENGTH_LONG).show();
         }else {
