@@ -3,6 +3,7 @@ package com.example.guyazran.currencyconverter;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +20,17 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -298,8 +305,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static float convertRateToFloat(String s){
-        int positionOfFirstDigit = s.indexOf('>', s.indexOf('>')+1)+1;
-        String rateAsString = s.substring(positionOfFirstDigit, s.indexOf('<', positionOfFirstDigit));
+//        int positionOfFirstDigit = s.indexOf('>', s.indexOf('>')+1)+1;
+//        String rateAsString = s.substring(positionOfFirstDigit, s.indexOf('<', positionOfFirstDigit));
+
+        Document doc = null;
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            InputSource inputSource = new InputSource(new StringReader(s));
+            doc = builder.parse(inputSource);
+        }catch(Exception ex){
+            Log.d("Guy", "error: " + ex.getMessage());
+        }
+
+        doc.getDocumentElement().normalize();
+
+        String rateAsString = doc.getDocumentElement().getTextContent();
 
         float rate = Float.valueOf(rateAsString);
 
