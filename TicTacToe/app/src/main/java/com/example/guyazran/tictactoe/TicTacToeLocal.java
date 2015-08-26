@@ -3,7 +3,7 @@ package com.example.guyazran.tictactoe;
 /**
  * Created by guyazran on 8/3/15.
  */
-public class TicTacToe {
+public class TicTacToeLocal {
 
     public enum CellValue{
         X, O, EMPTY
@@ -18,7 +18,7 @@ public class TicTacToe {
     private int moveCount;
     private boolean playable;
 
-    public TicTacToe(){
+    public TicTacToeLocal(){
         board = new CellValue[9];
         newGame();
     }

@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.guyazran.tictactoe.TicTacToe.MoveResult;
+import com.example.guyazran.tictactoe.TicTacToeLocal.MoveResult;
 
-public class MainActivity extends AppCompatActivity implements GameOverDialogFragment.GameOverDialogListener {
+public class LocalGameActivity extends AppCompatActivity implements GameOverDialogFragment.GameOverDialogListener {
 
-    TicTacToe game;
+    TicTacToeLocal game;
     LinearLayout boardLayout;
 
     int player1Score=0;
@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity implements GameOverDialogFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        game = new TicTacToe();
+        setContentView(R.layout.activity_local_game);
+        game = new TicTacToeLocal();
         boardLayout = (LinearLayout)findViewById(R.id.boardLayout);
         player1ScoreView = (TextView)findViewById(R.id.player1Score);
         player2ScoreView = (TextView)findViewById(R.id.player2Score);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements GameOverDialogFra
             boolean xTurn = game.isXTurn();
             int cell = (Integer)v.getTag();
             MoveResult moveResult = game.makeMove(cell);
-            if (moveResult == TicTacToe.MoveResult.INVALID_MOVE) {
+            if (moveResult == TicTacToeLocal.MoveResult.INVALID_MOVE) {
                 Toast.makeText(getBaseContext(), (game.isPlayable() ? "Invalid move!" : "Start a new game"), Toast.LENGTH_SHORT).show();
             }
             else{
@@ -65,14 +65,14 @@ public class MainActivity extends AppCompatActivity implements GameOverDialogFra
                     if (moveResult == MoveResult.VICTORY) {
                         if (xTurn) {
                             player1ScoreView.setText(String.valueOf(++player1Score));
-                            fragment.setFragment("We Have a Winner!", "Player 1 wins", MainActivity.this);
+                            fragment.setFragment("We Have a Winner!", "Player 1 wins", LocalGameActivity.this);
 
                         } else {
                             player2ScoreView.setText(String.valueOf(++player2Score));
-                            fragment.setFragment("We Have a Winner!", "Player 2 wins", MainActivity.this);
+                            fragment.setFragment("We Have a Winner!", "Player 2 wins", LocalGameActivity.this);
                         }
-                    } else if (moveResult == TicTacToe.MoveResult.DRAW) {
-                            fragment.setFragment("Draw", "Start a new game", MainActivity.this);
+                    } else if (moveResult == TicTacToeLocal.MoveResult.DRAW) {
+                            fragment.setFragment("Draw", "Start a new game", LocalGameActivity.this);
                     }
                     FragmentManager fragmentManager = getFragmentManager();
                     fragment.show(fragmentManager, "game over");
