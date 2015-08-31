@@ -1,0 +1,24 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="turn on the flashlight"
+        android:onClick="btnTurnOn"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="turn off the flashlight"
+        android:onClick="btnTurnOff"/>
+
+    <SurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/surface1" />
+
+</LinearLayout>
