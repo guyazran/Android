@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -141,5 +142,20 @@ public class MainActivity extends AppCompatActivity {
     public void btnStopThread(View view) {
         if (bound)
             myService.stopServiceThread();
+    }
+
+    public void btnStartLoggingLocation(View view) {
+        if (bound)
+            myService.startLog();
+    }
+
+    public void btnStopLoggingLocation(View view) {
+        if (bound)
+            myService.stopLog();
+    }
+
+    public void btnPrintLog(View view) {
+        DBAdapter dbAdapter = new DBAdapter(this);
+        exampleOfReadingFromDB(dbAdapter);
     }
 }

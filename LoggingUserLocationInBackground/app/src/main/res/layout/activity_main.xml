@@ -37,4 +37,29 @@
         android:layout_alignLeft="@+id/btnStopService"
         android:layout_below="@+id/btnStopService"/>
 
+    <Button
+        android:id="@+id/btnStartLocationLogging"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Log"
+        android:onClick="btnStartLoggingLocation"
+        android:layout_below="@+id/btnStartThread"/>
+
+    <Button
+        android:id="@+id/btnStopLoggingLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Log"
+        android:onClick="btnStopLoggingLocation"
+        android:layout_alignLeft="@+id/btnStopThread"
+        android:layout_below="@+id/btnStopThread"/>
+
+    <Button
+        android:id="@+id/btnPrintLog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Print to logcat"
+        android:onClick="btnPrintLog"
+        android:layout_below="@+id/btnStartLocationLogging"/>
+
 </RelativeLayout>
