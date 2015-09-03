@@ -1,5 +1,6 @@
 package com.example.guyazran.sharedpreferences;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
+
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(TEMPERATURE, 34.0f);
@@ -30,15 +31,18 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(USERNAME, "leon");
         editor.commit();
 
-        readSharedPreferences();
-*/
+        //readSharedPreferences();
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
+
+/*
 
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String userName = sharedPreferences.getString(USERNAME, "");
         TextView lblUserName = (TextView)findViewById(R.id.lblUserName);
         lblUserName.setText(userName);
-
-    }
+*/
+        }
 
     public void readSharedPreferences(){
         float temperature = sharedPreferences.getFloat(TEMPERATURE, 0);
