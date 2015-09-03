@@ -15,7 +15,10 @@ public class MainActivity extends AppCompatActivity implements CountdownThread.C
     LinearLayout linearLayout;
     int counter = 0;
     TextView[] textViews;
+    boolean firstTimer = true;
+    CountdownThread countdownThread;
     Handler handler;
+    int timerCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,12 @@ public class MainActivity extends AppCompatActivity implements CountdownThread.C
         for (int i = 0; i < textViews.length; i++) {
             textViews[i] = (TextView) linearLayout.findViewWithTag(String.valueOf(i+1));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        countdownThread.stopThread();
     }
 
     @Override
@@ -54,9 +63,15 @@ public class MainActivity extends AppCompatActivity implements CountdownThread.C
     }
 
     public void btnStartTimer(View view) {
-        if (counter<textViews.length){
-            CountdownThread countdownThread = new CountdownThread(counter++, this);
-            countdownThread.start();
+        if (timerCounter < 10) {
+            if (countdownThread == null || !countdownThread.isRunning()) {
+                firstTimer = false;
+                countdownThread = new CountdownThread(this, timerCounter);
+                countdownThread.start();
+            } else {
+                countdownThread.addTimer();
+            }
+            timerCounter++;
         }
     }
 
