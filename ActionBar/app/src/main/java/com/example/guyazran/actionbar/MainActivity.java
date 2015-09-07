@@ -1,9 +1,12 @@
 package com.example.guyazran.actionbar;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,8 +31,20 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_settings:
+                Toast.makeText(MainActivity.this, "settings...", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_help:
+                //Toast.makeText(MainActivity.this, "help...", Toast.LENGTH_SHORT).show();
+                Intent intentHelp = new Intent(this, HelpActivity.class);
+                startActivity(intentHelp);
+                return true;
+            case R.id.action_search:
+                //Toast.makeText(MainActivity.this, "search", Toast.LENGTH_SHORT).show();
+                Intent intentSearch = new Intent(this, SearchActivity.class);
+                startActivity(intentSearch);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
