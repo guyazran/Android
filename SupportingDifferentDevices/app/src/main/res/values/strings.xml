@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Supporting Different Devices</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="my_string">This is My String</string>
+    <string name="this_is_another_string">This is another string of mine</string>
+</resources>
