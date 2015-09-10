@@ -1,38 +1,40 @@
 package com.example.guyazran.animatingviews;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.Color;
-import android.media.MediaPlayer;
-import android.os.Environment;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import java.io.File;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity implements MoveBallThread.MoveBallListener {
 
     RelativeLayout layout;
     int layoutHeight;
     int layoutWidth;
-    ImageView ball;
+    ArrayList<Ball> balls;;
+    ArrayList<ImageView> ballViews;
     RelativeLayout.LayoutParams layoutParams;
     Handler handler;
     MoveBallThread moveBallThread;
+    private int nextBallType = 0;
+    private long addBallDelay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        File file = new File(getExternalFilesDir(null), "textfile.txt");
+        balls = new ArrayList<Ball>();
+        ballViews = new ArrayList<ImageView>();
+        layoutParams = new RelativeLayout.LayoutParams(100, 100);
 
         handler = new Handler();
         layout = (RelativeLayout) findViewById(R.id.layout);
@@ -44,14 +46,7 @@ public class MainActivity extends Activity implements MoveBallThread.MoveBallLis
                 layoutWidth = layout.getWidth();
                 ViewTreeObserver viewTreeObserver = layout.getViewTreeObserver();
                 viewTreeObserver.removeOnGlobalLayoutListener(this);
-                ball = new ImageView(MainActivity.this);
-                ball.setImageResource(R.drawable.red_ball);
-                layoutParams = new RelativeLayout.LayoutParams(100, 100);
-                layoutParams.setMargins(0, 0, 0, 0);
-                layout.addView(ball, layoutParams);
-                ball.setLayoutParams(layoutParams);
-                moveBallThread = new MoveBallThread(layoutHeight, layoutWidth, layoutParams.leftMargin,
-                        layoutParams.topMargin, MainActivity.this);
+                moveBallThread = new MoveBallThread(layoutHeight, layoutWidth, MainActivity.this, balls);
                 moveBallThread.start();
             }
         });
@@ -61,8 +56,7 @@ public class MainActivity extends Activity implements MoveBallThread.MoveBallLis
     protected void onResume() {
         super.onResume();
         if (layoutHeight != 0 && layoutWidth != 0){
-            moveBallThread = new MoveBallThread(layoutHeight, layoutWidth, layoutParams.leftMargin,
-                    layoutParams.topMargin, MainActivity.this);
+            moveBallThread = new MoveBallThread(layoutHeight, layoutWidth, MainActivity.this,balls);
             moveBallThread.start();
         }
     }
@@ -100,13 +94,67 @@ public class MainActivity extends Activity implements MoveBallThread.MoveBallLis
 
 
     @Override
-    public void onBallPositionChanged(final int width, final int height) {
+    public void onBallPositionChanged(final int ball) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                layoutParams.setMargins(width, height, 0, 0);
-                ball.setLayoutParams(layoutParams);
+                balls.get(ball).moveToNewPosition(ballViews.get(ball));
             }
         });
+    }
+
+    @Override
+    public void onBallCollision() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                //Toast.makeText(MainActivity.this, "ball collision", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void btnAddBall(View view) {
+        if (addBallDelay == 0 || System.nanoTime() - addBallDelay > 200000000 ) {
+            addBall();
+            setBallViewImage();
+            layout.addView(ballViews.get(ballViews.size() - 1), new LinearLayout.LayoutParams(100, 100));
+            addBallDelay = System.nanoTime();
+        }
+    }
+
+    private void addBall(){
+        if (nextBallType == 7){
+            nextBallType = 0;
+        }
+        balls.add(new Ball(nextBallType));
+        nextBallType++;
+        ballViews.add(new ImageView(MainActivity.this));
+    }
+
+    private void setBallViewImage(){
+        switch (balls.get(balls.size()-1).getType()){
+            case 0:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.red_ball);
+                break;
+            case 1:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.tennis_ball);
+                break;
+            case 2:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.soccer_ball);
+                break;
+            case 3:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.black_ball);
+                break;
+            case 4:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.beach_ball);
+                break;
+            case 5:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.checkered_ball);
+                break;
+            case 6:
+                ballViews.get(ballViews.size() - 1).setImageResource(R.drawable.eight_ball);
+                break;
+        }
+
     }
 }
